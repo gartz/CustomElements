@@ -385,6 +385,13 @@ if (useNative) {
   function cloneNode(deep) {
     // call original clone
     var n = domCloneNode.call(this, deep);
+    // if doesn't support `content`:
+    // TODO: detect all custom properties and clone in the new element
+    ['content', 'content_'].forEach(function (prop) {
+        if (this[prop] && !n[prop]) {
+            n[prop] = this[prop];
+        }
+    }.bind(this));
     // upgrade the element and subtree
     scope.upgradeAll(n);
     // return the clone
